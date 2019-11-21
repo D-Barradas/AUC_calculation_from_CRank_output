@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[59]:
+# In[29]:
+
+
+# %load ../calculate_auc_from_CR_out_file.py
+#!/usr/bin/env python
 
 
 import string
@@ -10,8 +14,6 @@ from math import *
 from scipy import *
 from sklearn import metrics
 
-
-# In[109]:
 
 
 def read_zscore_file(zscore_file):
@@ -61,37 +63,59 @@ def read_zscore_file(zscore_file):
 #             FP = 1
 #             TFP = TFP + 1
 
-        g.write("line:{} TP:{} FP:{} TTP:{} TFP:{}\n".format(line, TP, FP, TTP, TFP))
+#         g.write("line:{} TP:{} FP:{} TTP:{} TFP:{}\n".format(line, TP, FP, TTP, TFP))
     #    print line, TP, FP, TTP, TFP
         new_file_with_columns.append((line, TP, FP, TTP, TFP))
+    g.write("{} {}\n".format(TTP, TFP))
+    for m in new_file_with_columns:
+        new_line = " ".join(m[0].split("_"))
+        TP2, FP2, TTP2, TFP2 = m[1],m[2],m[3],m[4]
+        g.write("{} {} {} {} {}\n".format(new_line, TP2, FP2, TTP2, TFP2))
     return ( TTP,TFP , new_file_with_columns, name)
     # print >>g, TTP,TFP
+
+
+
+# In[30]:
 
 
 # In[110]:
 
 
 def calculate_auc (new_file_with_columns,TTP ,TFP ):
-    totalPositive = TTP
-    totalNegative = TFP     
+    totalPositive = float(TTP)
+    totalNegative = float(TFP)     
     if totalPositive == 0 or totalNegative == 0:
         print ("Warning ! totalPositive = {}  totalNegative = {} ".format(totalPositive,totalNegative))
     else : 
         tprs = []
         fprs = []
         predictedTruePositiveSofar = 0
-        predictedFalsePositiveSofar = 0    
-        for n,d in enumerate(new_file_with_columns):
-            true_col = int(d[1])
-            false_col = int(d[2])
+        predictedFalsePositiveSofar = 0  
+
+        for d in new_file_with_columns:
+#             tprs.append(float(d[3])/float(totalPositive))
+#             fprs.append(float(d[3])/float(totalPositive))
+            
+#             print (n,d)
+            true_col = float(d[1])
+            false_col = float(d[2])
             if true_col == 1 :
                 predictedTruePositiveSofar +=1
-            else :
+            if false_col == 1:
+#             else :
+
                 predictedFalsePositiveSofar +=1
 
-            tprs.append(float(predictedTruePositiveSofar)/totalPositive)
-            fprs.append(float(predictedFalsePositiveSofar)/totalNegative)
+            tprs.append(float(predictedTruePositiveSofar)/float(totalPositive))
+            fprs.append(float(predictedFalsePositiveSofar)/float(totalNegative))
         return ( metrics.auc(fprs, tprs) )
+
+
+
+
+
+# In[31]:
 
 
 # In[127]:
@@ -100,7 +124,7 @@ def calculate_auc (new_file_with_columns,TTP ,TFP ):
 # file = "only_zscore/CP57/Zscore.txt"
 # file = "/Users/barradd/Desktop/AUC/test-Zscore"
 file = "%s"%(sys.argv[1])
-#file = "/Users/barradd/Desktop/AUC/T26_Zscore5.0.txt"
+# file = "../data/T26_Zscore5.0.txt"
 
 
 # In[128]:
@@ -112,13 +136,23 @@ my_TTP, my_TFP, my_data , name =  read_zscore_file(file)
 # In[129]:
 
 
-print (my_TTP, my_TFP)
+# print (my_TTP, my_TFP)
 
 
 # In[130]:
 
 
 print ( "file:", name, "AUC:" , calculate_auc(my_data,my_TTP, my_TFP))
+
+
+# In[32]:
+
+
+# !head ../data/T26_Zscore5.0.txt*
+
+
+# In[ ]:
+
 
 
 
