@@ -17,7 +17,7 @@ from sklearn import metrics
 def read_zscore_file(zscore_file):
     #Inizio di lettura
     f = open(zscore_file).readlines()
-
+    g = open("%s.auc.temp"%(zscore_file) ,"w")
 #     name = sys.argv[1].split(".")
     name = zscore_file.split(".")[0]
 
@@ -61,6 +61,7 @@ def read_zscore_file(zscore_file):
 #             FP = 1
 #             TFP = TFP + 1
 
+        g.write("line:{} TP:{} FP:{} TTP:{} TFP:{}\n".format(line, TP, FP, TTP, TFP))
     #    print line, TP, FP, TTP, TFP
         new_file_with_columns.append((line, TP, FP, TTP, TFP))
     return ( TTP,TFP , new_file_with_columns, name)
@@ -111,7 +112,7 @@ my_TTP, my_TFP, my_data , name =  read_zscore_file(file)
 # In[129]:
 
 
-#print (my_TTP, my_TFP)
+print (my_TTP, my_TFP)
 
 
 # In[130]:
