@@ -46,7 +46,7 @@ def read_zscore_file(zscore_file):
     # check if this line is a HQ model. In the case, store it
         TP = 0
         FP = 0
-        if "I" in F or "G" in F :
+        if "I" in F or "G" in F or "R" in F :
             FP =1
             TFP += 1
             
