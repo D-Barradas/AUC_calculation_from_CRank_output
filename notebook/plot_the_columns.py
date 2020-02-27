@@ -35,6 +35,15 @@ def Warning_to_nan(x) :
 # In[ ]:
 
 
+def split_the_column_10(x):
+    total = x.split("/")[0]
+    number = x.split("/")[1].split("*")[0]
+    return int(number)
+
+
+# In[ ]:
+
+
 ##Parse the options
 usage = "USAGE: python plot_the_columns.py --f1 excelfile\n"
 parser = OptionParser(usage=usage)
@@ -83,6 +92,13 @@ full_table["AUC_num"] = full_table["AUC"].apply(Warning_to_nan)
 
 # In[ ]:
 
+
+full_table["New_total"] = full_table["NL on 10"].apply(split_the_column_10)
+
+
+# In[ ]:
+
+
 sns.lineplot(data=full_table , x='iteration step', y='AUC_num', hue="Target")
 plt.grid(True)
 plt.title("AUC")
@@ -91,7 +107,9 @@ plt.ylabel("AUC")
 plt.savefig("figures/AUC.png",format="png",transparent=True)
 plt.clf()
 
+
 # In[ ]:
+
 
 sns.lineplot(data=full_table , x='iteration step', y='NL on 50', hue="Target")
 plt.grid(True)
@@ -99,7 +117,9 @@ plt.title("NL on 50")
 plt.savefig("figures/NL_on_50.png",format="png",transparent=True)
 plt.clf()
 
+
 # In[ ]:
+
 
 sns.lineplot(data=full_table , x='iteration step', y='NL on 20', hue="Target")
 plt.grid(True)
@@ -107,10 +127,23 @@ plt.title("NL on 50")
 plt.savefig("figures/NL_on_20.png",format="png",transparent=True)
 plt.clf()
 
+
 # In[ ]:
+
 
 sns.lineplot(data=full_table , x='iteration step', y='NL on 20%', hue="Target")
 plt.grid(True)
 plt.title("NL on 50")
 plt.savefig("figures/NL_on_20_percent.png",format="png",transparent=True)
 plt.clf()
+
+
+# In[ ]:
+
+
+sns.lineplot(data=full_table , x='iteration step', y='NL on 10 total', hue="Target")
+plt.grid(True)
+plt.title("NL on 10")
+plt.savefig("figures/NL_on_10.png",format="png",transparent=True)
+plt.clf()
+
